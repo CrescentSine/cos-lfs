@@ -1,5 +1,11 @@
 import config from "config";
+import COS from "cos-nodejs-sdk-v5";
 import fastify from "fastify";
+
+const cos = new COS({
+    SecretId: config.get("secretId"),
+    SecretKey: config.get("secretKey"),
+});
 
 const server = fastify({
     logger: true,
@@ -15,7 +21,7 @@ server.post("/batch", (req, resp) => {
     console.log("header:", req.headers);
     console.log("body:", req.body);
 
-    const expire = config.get("expire");
+    const expires = config.get("expires");
 
     switch (req.body.operation) {
         case "upload":
@@ -26,11 +32,18 @@ server.post("/batch", (req, resp) => {
                     authenticated: true,
                     actions: {
                         upload: {
-                            href: "TODO",
+                            href: cos.getObjectUrl({
+                                Bucket: config.get("cosBucket"),
+                                Region: config.get("cosRegion"),
+                                Key: oid,
+                                Method: 'PUT',
+                                Sign: true,
+                                Expires: expires,
+                            }),
                             header: {
                                 'Content-Type': 'application/octet-stream',
                             },
-                            expires_in: expire,
+                            expires_in: expires,
                         }
                     },
                 };
@@ -44,8 +57,14 @@ server.post("/batch", (req, resp) => {
                     authenticated: true,
                     actions: {
                         download: {
-                            href: "TODO",
-                            expires_in: expire,
+                            href: cos.getObjectUrl({
+                                Bucket: config.get("cosBucket"),
+                                Region: config.get("cosRegion"),
+                                Key: oid,
+                                Sign: true,
+                                Expires: expires,
+                            }),
+                            expires_in: expires,
                         }
                     },
                 };

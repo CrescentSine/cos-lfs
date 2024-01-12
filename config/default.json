@@ -1,4 +1,8 @@
 {
     "serverPort": 9750,
-    "expire": 3600
+    "expires": 3600,
+    "secretId": "secretId",
+    "secretKey": "secretKey",
+    "cosBucket": "bucketName",
+    "cosRegion": "regionName"
 }
