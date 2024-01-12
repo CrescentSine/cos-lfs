@@ -1,3 +1,4 @@
 {
-    "serverPort": 9750
+    "serverPort": 9750,
+    "expire": 3600
 }
