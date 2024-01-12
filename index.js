@@ -2,6 +2,8 @@ import config from "config";
 import COS from "cos-nodejs-sdk-v5";
 import fastify from "fastify";
 
+console.log("config:", config);
+
 const cos = new COS({
     SecretId: config.get("secretId"),
     SecretKey: config.get("secretKey"),
