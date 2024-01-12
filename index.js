@@ -2,8 +2,6 @@ import config from "config";
 import COS from "cos-nodejs-sdk-v5";
 import fastify from "fastify";
 
-console.log("config:", config);
-
 const cos = new COS({
     SecretId: config.get("secretId"),
     SecretKey: config.get("secretKey"),
@@ -13,15 +11,13 @@ const server = fastify({
     logger: true,
 });
 
-server.post("/batch", (req, resp) => {
+server.addContentTypeParser("application/vnd.git-lfs+json", { parseAs: "buffer" }, server.getDefaultJsonParser('ignore', 'ignore'));
+
+server.post("/objects/batch", (req, resp) => {
     const respData = {
         transfer: "basic",
         objects: [],
     };
-
-    console.log("url:", req.url);
-    console.log("header:", req.headers);
-    console.log("body:", req.body);
 
     const expires = config.get("expires");
 
@@ -76,8 +72,6 @@ server.post("/batch", (req, resp) => {
             console.warn("unknown operation:", req.body.operation);
             break;
     }
-
-    console.log("respData:", respData);
 
     resp.header("Content-Type", "application/vnd.git-lfs+json");
     resp.code(200).send(respData);
