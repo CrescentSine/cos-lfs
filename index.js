@@ -79,4 +79,5 @@ server.post("/objects/batch", (req, resp) => {
 
 server.listen({
     port: config.get('serverPort'),
+    host: '0.0.0.0',
 });
