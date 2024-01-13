@@ -36,11 +36,13 @@ server.post("/objects/batch", (req, resp) => {
                             Region: config.get("cosRegion"),
                             Key: oid,
                             Method: 'PUT',
+                            Protocol: 'https:',
                             Sign: true,
                             Expires: expires,
                         }),
                         header: {
                             'Content-Type': 'application/octet-stream',
+                            'x-cos-storage-class': 'INTELLIGENT_TIERING',
                         },
                         expires_in: expires,
                     }
@@ -58,6 +60,7 @@ server.post("/objects/batch", (req, resp) => {
                             Bucket: config.get("cosBucket"),
                             Region: config.get("cosRegion"),
                             Key: oid,
+                            Protocol: 'https:',
                             Sign: true,
                             Expires: expires,
                         }),
